@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "Gmail Watcher",
+  "version": "1.0",
+  "description": "Watch for changes in Gmail using the Gmail API.",
+  "host_permissions": ["http://localhost:5000/",
+    "https://accounts.google.com/*",
+    "https://www.googleapis.com/*"
+],
+  "permissions": [
+    "identity",
+    "identity.email",
+    "background",
+    "activeTab"
+  ],
+  "oauth2": {
+    "client_id": "131532675483-b2g5k8mddfqk1bsrrlanfkn7jp2h2ttt.apps.googleusercontent.com",
+    "scopes": ["openid", "email", "profile","https://www.googleapis.com/auth/gmail.readonly", "https://mail.google.com/"]
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module" 
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+        "16":"assets/16x16.png",
+        "24": "assets/24x24.png",
+        "32": "assets/32x32.png"
+      }
+  }
+}
+
