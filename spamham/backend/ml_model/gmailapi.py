@@ -6,14 +6,16 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
 import json
+
 # If modifying these SCOPES, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 
 senders=[]
 subjects=[]
 msgs=[]
-
+messageids=[]
 def authenticate():
     creds = None
     if os.path.exists('token.json'):
@@ -31,7 +33,7 @@ def authenticate():
 
 def list_messages(service, user_id='me', max_results=10):
     try:
-        response = service.users().messages().list(userId=user_id, maxResults=max_results).execute()
+        response = service.users().messages().list(userId=user_id,labelIds=['UNREAD','INBOX'],maxResults=max_results).execute()
         messages = []
         if 'messages' in response:
             messages.extend(response['messages'])
@@ -66,6 +68,20 @@ def get_message(service, user_id, msg_id):
     except Exception as error:
         print(f'An error occurred: {error}')
 
+def watch_gmail(creds):
+    try:
+        service = build('gmail', 'v1', credentials=creds)
+        request = {
+            'labelIds': ['INBOX'],
+            'topicName': 'projects/gmail-api-426609/topics/MyTopic'
+        }
+        response = service.users().watch(userId='me', body=request).execute()
+        print('Watch response: %s' % response)
+    
+    except HttpError as error:
+        print(f'An error occurred: {error}')
+        response = None
+
 
 def main():
     creds = authenticate()
@@ -75,6 +91,7 @@ def main():
         print('No messages found.')
     else:
         for message in messages:
+          messageids.append(message['id'])
           get_message(service, 'me', message['id'])
     # for i in range(len(msgs)):
     #     print("message:",msgs[i])
@@ -85,6 +102,7 @@ main()
 emails={'emails':[]}
 for message in range(len(msgs)):
     email_info = {
+        'message_id': messageids[message],
         'message': msgs[message],
         'sender': senders[message],
         'subject': subjects[message]
@@ -100,6 +118,7 @@ for email in emails['emails']:
         prediction='Spam'
         
     predictions.append({
+        'message_id': email['message_id'],
         'sender': email['sender'],
         'subject': email['subject'],
         'prediction': prediction

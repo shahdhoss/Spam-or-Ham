@@ -11,7 +11,7 @@
     "identity",
     "identity.email",
     "background",
-    "activeTab"
+    "activeTab","notifications"
   ],
   "oauth2": {
     "client_id": "131532675483-b2g5k8mddfqk1bsrrlanfkn7jp2h2ttt.apps.googleusercontent.com",

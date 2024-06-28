@@ -185,24 +185,19 @@ body {
     background-color: transparent;
   }
 }
-.important-icon {
-  width: 0;
-  height: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-bottom: 20px solid yellow;
-  position: relative;
-  margin: 10px;
+
+#errorContainer {
+  color: #fffffe;
+  text-align: center; /* Center text horizontally */
+  margin: 0 auto; /* Center the div itself horizontally */
+  display: flex; /* Use flexbox to center content */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  height: 20; /* Adjust as needed */
+  display: none; /* Hide by default */
 }
 
-.important-icon::before {
-  content: '';
-  width: 0;
-  height: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-top: 10px solid yellow;
-  position: absolute;
-  top: -10px;
-  left: -10px;
+.email-link {
+  text-decoration: none;
+  color: inherit; /* This ensures the link text takes the color of its parent element */
 }

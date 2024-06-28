@@ -20,7 +20,7 @@ function authenticateUser(callback) {
           return;
       }
       console.log('Authentication token:', token);
-      fetch('http://localhost:5000/', {
+      fetch('http://127.0.0.1:5000/', {
           method: 'GET',
           headers: {
               'Authorization': 'Bearer ' + token
@@ -36,6 +36,27 @@ function authenticateUser(callback) {
       });
   });
 }
+
+async function checkForNotifications() {
+  try {
+    const response = await fetch('https://<your-service-url>/get-notifications');
+    const data = await response.json();
+    if (data.newEmails) {
+      chrome.notifications.create('gmail-notification', {
+        type: 'basic',
+        iconUrl: 'icon.png',
+        title: 'New Email',
+        message: 'You have a new email!'
+      });
+    }
+  } catch (error) {
+    console.error('Error fetching notifications:', error);
+  }
+}
+
+chrome.runtime.onStartup.addListener(checkForNotifications);
+chrome.runtime.onInstalled.addListener(checkForNotifications);
+setInterval(checkForNotifications, 60000);  // Check every minute
 
 
 
